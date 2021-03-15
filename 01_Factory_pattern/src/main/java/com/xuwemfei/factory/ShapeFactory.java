@@ -8,7 +8,7 @@ import com.xuwemfei.jiekou.impl.Rectangle;
  * @author:徐文飞
  * @description 形状工厂
  * @create 2021-03-15 9:32
- * @Copyright (C), 2006-2021, XX有限公司
+ * @Copyright (C), 2006-2021, 阿里巴巴有限公司
  */
 public class ShapeFactory {
     //    使用getShape方法获取形状类型的对象
