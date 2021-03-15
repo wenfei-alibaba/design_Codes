@@ -1,0 +1,8 @@
+# Project exclude paths
+/01_Factory_pattern/target/
+/02_AbstractFactory_pattern/target/
+/03_Singleton_pattern/target/
+/04_Builder_pattern/target/
+/05_Prototype_pattern/target/
+/06_Adapter_pattern/target/
+/target/
