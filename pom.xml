@@ -17,6 +17,10 @@
         <module>06_Adapter_pattern</module>
         <module>07_Bridge_pattern</module>
         <module>08_Filter_pattern</module>
+        <module>09_Composite _pattern</module>
+        <module>10_Decorator _pattern</module>
+        <module>11_Facade_pattern</module>
+        <module>12_Flyweight_pattern</module>
     </modules>
 
     <parent>
