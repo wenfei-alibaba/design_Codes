@@ -21,6 +21,7 @@
         <module>10_Decorator _pattern</module>
         <module>11_Facade_pattern</module>
         <module>12_Flyweight_pattern</module>
+        <module>13_LVS</module>
     </modules>
 
     <parent>

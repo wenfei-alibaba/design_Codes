@@ -1,0 +1,73 @@
+1.node01(192.168.200.100):
+[root@node01 ~]# ifconfig eth0:8 192.168.200.200/24
+
+2.在node02~node03上调协议
+[root@node02 ~]# cd /proc/sys/net/ipv4/conf/
+[root@node02 eth0]# echo 1 > arp_ignore
+[root@node02 eth0]# echo 2 > arp_announce
+
+[root@node02 all]# echo 1 > arp_ignore
+[root@node02 all]# echo 2 > arp_announce
+配置vip
+[root@node02 all]# ifconfig lo:2 192.168.200.200  netmask 255.255.255.255
+
+3.在node02~node03安装RS协议
+安装过程出现：Error: Rpmdb checksum is invalid: pkg checksums
+yum clean all
+yum makecache
+安装
+yum install httpd -y
+service httpd start
+[root@node02 ~]# vi /var/www/html/index.html
+from 192.168.200.110
+[root@node03 ~]# vi /var/www/html/index.html
+from 192.168.200.120
+
+4.在node01安装lvs工具
+[root@node01 ~]# yum install ipvsadm -y
+[root@node01 ~]# ipvsadm -A -t 192.168.200.200:80 -s rr
+[root@node01 ~]# ipvsadm -ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.200.200:80 rr
+
+[root@node01 ~]# ipvsadm -a  -t 192.168.200.200:80 -r 192.168.200.110 -g -w 1
+[root@node01 ~]# ipvsadm -a  -t 192.168.200.200:80 -r 192.168.200.120 -g -w 1
+
+[root@node01 ~]# ipvsadm -ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.200.200:80 rr
+  -> 192.168.200.110:80           Route   1      0          0
+  -> 192.168.200.120:80           Route   1      0          0
+You have new mail in /var/spool/mail/root
+
+5.验证
+浏览器访问192.168.200.200 看到负载
+node01:
+netstat -natp
+
+node03:
+
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11479  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11483  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11505  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11509  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11477  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11434  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11513  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11475  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11502  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11495  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11511  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11485  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11515  ESTABLISHED 5045/httpd
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11497  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11491  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11493  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11507  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11499  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11489  TIME_WAIT   -
+tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11481  TIME_WAIT   -
