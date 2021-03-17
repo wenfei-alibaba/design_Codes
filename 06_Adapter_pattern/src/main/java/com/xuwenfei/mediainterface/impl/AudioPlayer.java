@@ -6,7 +6,7 @@ import com.xuwenfei.mediainterface.MediaPlayer;
  * @author:徐文飞
  * @description AudioPlayer 实现类
  * @create 2021-03-15 14:43
- * @Copyright (C), 2006-2021, XX有限公司
+ * @Copyright (C), 2006-2021, alibaba有限公司
  */
 public class AudioPlayer implements MediaPlayer {
     MediaAdapter mediaAdapter;
