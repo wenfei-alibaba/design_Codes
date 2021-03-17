@@ -5,5 +5,4 @@ package com.xuwenfei;
  */
 public interface Shape {
     void draw();
-
 }
