@@ -22,6 +22,9 @@
         <module>11_Facade_pattern</module>
         <module>12_Flyweight_pattern</module>
         <module>13_LVS</module>
+        <module>13_Proxy _pattern</module>
+        <module>14_Chain_of_Responsibility_pattern</module>
+        <module>14_Command_pattern</module>
     </modules>
 
     <parent>
