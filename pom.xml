@@ -28,6 +28,7 @@
         <module>15_Interpreter_pattern</module>
         <module>16_Iterator_pattern</module>
         <module>17_Mediator_pattern</module>
+        <module>18_Memento_pattern</module>
     </modules>
 
     <parent>
