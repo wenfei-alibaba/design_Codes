@@ -25,6 +25,7 @@
         <module>13_Proxy _pattern</module>
         <module>14_Chain_of_Responsibility_pattern</module>
         <module>14_Command_pattern</module>
+        <module>15_Interpreter_pattern</module>
     </modules>
 
     <parent>
