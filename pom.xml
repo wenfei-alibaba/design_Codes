@@ -32,6 +32,7 @@
         <module>19_Observer_pattern</module>
         <module>20_State _pattern</module>
         <module>21_Null_Object_pattern</module>
+        <module>22_Strategy_pattern</module>
     </modules>
 
     <parent>
