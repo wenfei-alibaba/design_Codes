@@ -29,6 +29,7 @@
         <module>16_Iterator_pattern</module>
         <module>17_Mediator_pattern</module>
         <module>18_Memento_pattern</module>
+        <module>19_Observer_pattern</module>
     </modules>
 
     <parent>
