@@ -34,7 +34,6 @@ TCP  192.168.200.200:80 rr
 
 [root@node01 ~]# ipvsadm -a  -t 192.168.200.200:80 -r 192.168.200.110 -g -w 1
 [root@node01 ~]# ipvsadm -a  -t 192.168.200.200:80 -r 192.168.200.120 -g -w 1
-
 [root@node01 ~]# ipvsadm -ln
 IP Virtual Server version 1.2.1 (size=4096)
 Prot LocalAddress:Port Scheduler Flags
@@ -71,3 +70,73 @@ tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11507  TIME
 tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11499  TIME_WAIT   -
 tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11489  TIME_WAIT   -
 tcp        0      0 ::ffff:192.168.200.200:80   ::ffff:192.168.200.1:11481  TIME_WAIT   -
+
+
+
+2.基于keepalived的LVS集群搭建
+主机：node01~node04
+node01:
+      ipvsadm -C
+      ifconfig eth0:8 down
+###########################################################################################################
+node01、node04:
+  node01:
+      yum install keepalived ipvsadm -y 
+      修改配置文件
+      cd /etc/keepalived/
+      cp keepalived.conf keepalived.conf.bak
+      vi keepalived.conf
+      vrrp:虚拟路由冗余协议
+          
+    vrrp_instance VI_1 {
+    state MASTER  // node04 BACKUP
+    interface eth0
+    virtual_router_id 51
+    priority 100 //  node04 50
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.200.200/24 dev eth0 label eth0:3
+    }
+}
+
+
+virtual_server 192.168.200.200 80 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind DR 
+    nat_mask 255.255.255.0
+    persistence_timeout 0
+    protocol TCP
+
+    real_server 192.168.200.110 80 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /
+              status_code 200
+            }
+            connect_timeout 3
+            nb_get_retry 3
+            delay_before_retry 3
+        }
+    }
+	
+	real_server 192.168.200.120 80 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /
+              status_code 200
+            }
+            connect_timeout 3
+            nb_get_retry 3
+            delay_before_retry 3
+        }
+    }
+}
+
+  node01:scp /etc/keepalived/keepalived.conf node04:/etc/keepalived/
